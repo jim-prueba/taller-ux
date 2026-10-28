@@ -1,36 +1,36 @@
-const formulario = document.getElementById("form-biblioteca");
+const formulario = document.getElementById("formulario");
 const mensaje = document.getElementById("mensaje");
-
+const boton = formulario.querySelector(".boton-principal");
 function mostrarMensaje(texto, tipo) {
   mensaje.textContent = texto;
   mensaje.className = "mensaje " + tipo;
 }
-
 formulario.addEventListener("submit", function (evento) {
   evento.preventDefault();
   formulario.classList.add("validado");
-
   if (!formulario.checkValidity()) {
-    mostrarMensaje("Revisa los campos obligatorios marcados en rojo.", "error");
+    mostrarMensaje("Revisa los campos marcados en rojo.", "error");
     formulario.querySelector("input:invalid, select:invalid").focus();
     return;
   }
-
-  mostrarMensaje("Guardando en la base de datos de la biblioteca...", "info");
-
+  boton.disabled = true;
+  boton.textContent = "Enviando...";
+  mostrarMensaje("Enviando tu inscripción...", "info");
   setTimeout(function () {
-    mostrarMensaje("¡Listo! El libro ha sido registrado con éxito.", "exito");
-    formulario.reset();
-    formulario.classList.remove("validado");
+    boton.disabled = false;
+    boton.textContent = "Inscribirme";
+    const taller = document.getElementById("taller").value;
+    mostrarMensaje(
+      "¡Listo! Quedaste inscrito en el taller de " + taller + ".",
+      "exito",
+    );
   }, 1500);
 });
-
 formulario.addEventListener("reset", function (evento) {
-  if (
-    !confirm("¿Seguro que quieres limpiar todos los campos del formulario?")
-  ) {
+  if (!confirm("¿Seguro que quieres borrar todos los datos del formulario?")) {
     evento.preventDefault();
     return;
   }
-  mostrarMensaje("Formulario limpio. Puede empezar de nuevo.", "info");
+  formulario.classList.remove("validado");
+  mostrarMensaje("Formulario limpio. Puedes empezar de nuevo.", "info");
 });
